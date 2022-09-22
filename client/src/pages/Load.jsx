@@ -1,7 +1,8 @@
 import React from "react"
+import Spinner from "react-bootstrap/Spinner"
 
 function Load() {
-  return <div>Loading...</div>
+  return <Spinner animation='grow'></Spinner>
 }
 
 export default Load

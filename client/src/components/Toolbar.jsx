@@ -1,17 +1,32 @@
 import React from "react"
 import { useContext } from "react"
+import Button from "react-bootstrap/Button"
+import LockOpenIcon from "@mui/icons-material/LockOpen"
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
+import ButtonGroup from "react-bootstrap/ButtonGroup"
 
 function Toolbar(props) {
-  const { checkedIDs, handleBlock, handleUnblock, handleDelete } = useContext(
-    props.checkboxContext
-  )
+  const { checkedIDs, manageAccess } = useContext(props.checkboxContext)
 
   return (
-    <div>
-      <button onClick={() => handleBlock(checkedIDs)}>Block</button>
-      <button onClick={() => handleUnblock(checkedIDs)}>Unblock</button>
-      <button onClick={() => handleDelete(checkedIDs)}>Delete</button>
-    </div>
+    <ButtonGroup>
+      {/* status codes: 0 - block, 1 - unblock, 2 - delete from db */}
+      <Button
+        variant='outline-dark'
+        onClick={() => manageAccess(checkedIDs, 0)}
+      >
+        Block
+      </Button>
+      <Button
+        variant='outline-dark'
+        onClick={() => manageAccess(checkedIDs, 1)}
+      >
+        <LockOpenIcon />
+      </Button>
+      <Button variant='danger' onClick={() => manageAccess(checkedIDs, 2)}>
+        <DeleteForeverIcon />
+      </Button>
+    </ButtonGroup>
   )
 }
 

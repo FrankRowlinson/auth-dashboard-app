@@ -1,10 +1,11 @@
 import "./App.css"
+import { useCookies } from "react-cookie"
+import { useState, useEffect } from "react"
+import Container from "react-bootstrap/Container"
 import Auth from "./pages/Auth"
 import Dashboard from "./pages/Dashboard"
 import Load from "./pages/Load"
 import authChecker from "./services/authChecker"
-import { useCookies } from "react-cookie"
-import { useState, useEffect } from "react"
 
 function App() {
   const [cookie, , removeCookie] = useCookies()
@@ -13,7 +14,7 @@ function App() {
   const [update, setUpdate] = useState(false)
 
   const updateTable = () => {
-    setTimeout(() => setUpdate(!update), 150)
+    setTimeout(() => setUpdate(!update), 200)
   }
 
   useEffect(() => {
@@ -30,7 +31,7 @@ function App() {
   }
 
   return (
-    <div className='App'>
+    <Container className='App  min-vh-100'>
       {isLoading ? (
         <Load />
       ) : access ? (
@@ -38,7 +39,7 @@ function App() {
       ) : (
         <Auth />
       )}
-    </div>
+    </Container>
   )
 }
 

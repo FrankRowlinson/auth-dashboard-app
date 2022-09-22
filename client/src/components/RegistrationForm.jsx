@@ -1,6 +1,8 @@
 import React from "react"
-import { Formik, Field, Form, ErrorMessage } from "formik"
+import { Formik, Field, Form as FormikForm, ErrorMessage } from "formik"
 import * as Yup from "yup"
+import Form from "react-bootstrap/Form"
+import Button from "react-bootstrap/Button"
 import FormError from "./FormError"
 import FormMessage from "./FormMessage"
 import axios from "axios"
@@ -14,9 +16,8 @@ function RegistrationForm(props) {
 
   const onSubmit = (data) => {
     axios.post("http://localhost:3001/register", data).then((res) => {
-      console.log(res)
       if (res.data.hasOwnProperty("errors")) {
-        props.setMessage({ text: "Try different username of email", status: 1 })
+        props.setMessage({ text: "Try different username or email", status: 1 })
       } else {
         props.setMessage({ text: "Success", status: 0 })
       }
@@ -31,7 +32,6 @@ function RegistrationForm(props) {
 
   return (
     <div>
-      <FormMessage message={props.message} />
       <Formik
         initialValues={initialValues}
         onSubmit={(values, { resetForm }) => {
@@ -40,27 +40,43 @@ function RegistrationForm(props) {
         }}
         validationSchema={validationSchema}
       >
-        <Form>
-          <label>Username</label>
-          <Field id='reg-username' name='username' placeholder='SpiderManXxX' />
-          <ErrorMessage name='username' component={FormError} />
-          <label>Email</label>
-          <Field
-            id='reg-email'
-            name='email'
-            placeholder='johnyDepp@hotmail.com'
-          />
-          <ErrorMessage name='email' component={FormError} />
-          <label>Password</label>
-          <Field
-            id='reg-password'
-            name='password'
-            placeholder='super_secure_password'
-            type='password'
-          />
-          <ErrorMessage name='password' component={FormError} />
-          <button type='submit'>Sign Up!</button>
-        </Form>
+        <FormikForm className='w-100 h-100'>
+          <FormMessage message={props.message} />
+          <Form.Group className='mb-2'>
+            <Form.Label class='d-block text-start mb-1'>Username</Form.Label>
+            <Field
+              className='form-control'
+              id='reg-username'
+              name='username'
+              placeholder='SpiderManXxX'
+            />
+            <ErrorMessage name='username' component={FormError} />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label class='d-block text-start'>Email</Form.Label>
+            <Field
+              className='form-control'
+              id='reg-email'
+              name='email'
+              placeholder='johnyDepp@hotmail.com'
+            />
+            <ErrorMessage name='email' component={FormError} />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label class='d-block text-start'>Password</Form.Label>
+            <Field
+              className='form-control'
+              id='reg-password'
+              name='password'
+              placeholder='super_secure_password'
+              type='password'
+            />
+            <ErrorMessage name='password' component={FormError} />
+          </Form.Group>
+          <Button className='mt-3' variant='dark' type='submit'>
+            Sign Up
+          </Button>
+        </FormikForm>
       </Formik>
     </div>
   )

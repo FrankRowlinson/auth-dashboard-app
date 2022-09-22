@@ -1,9 +1,11 @@
 import React from "react"
-import { Formik, Field, Form, ErrorMessage } from "formik"
+import { useCookies } from "react-cookie"
+import { Formik, Field, Form as FormikForm, ErrorMessage } from "formik"
 import * as Yup from "yup"
+import Form from "react-bootstrap/Form"
+import Button from "react-bootstrap/Button"
 import FormError from "./FormError"
 import axios from "axios"
-import { useCookies } from "react-cookie"
 
 function AuthForm() {
   const [, setCookie] = useCookies()
@@ -37,20 +39,32 @@ function AuthForm() {
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      <Form>
-        <label>Username</label>
-        <Field id='auth-username' name='username' placeholder='SpiderManXxX' />
-        <ErrorMessage name='username' component={FormError} />
-        <label>Password</label>
-        <Field
-          id='auth-password'
-          name='password'
-          placeholder='super_secure_password'
-          type='password'
-        />
-        <ErrorMessage name='password' component={FormError} />
-        <button type='submit'>Sign In!</button>
-      </Form>
+      <FormikForm className='w-100 h-100'>
+        <Form.Group>
+          <Form.Label class='d-block text-start'>Username</Form.Label>
+          <Field
+            className='form-control'
+            id='auth-username'
+            name='username'
+            placeholder='Your username...'
+          />
+          <ErrorMessage name='username' component={FormError} />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label class='d-block text-start'>Password</Form.Label>
+          <Field
+            className='form-control'
+            id='auth-password'
+            name='password'
+            placeholder='Your secret password...'
+            type='password'
+          />
+          <ErrorMessage name='password' component={FormError} />
+        </Form.Group>
+        <Button className='mt-3' variant='dark' type='submit'>
+          Sign In
+        </Button>
+      </FormikForm>
     </Formik>
   )
 }

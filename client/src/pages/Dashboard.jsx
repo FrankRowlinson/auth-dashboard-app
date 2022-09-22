@@ -1,6 +1,9 @@
 import { createContext, useState, useEffect } from "react"
 import { useCookies } from "react-cookie"
 import axios from "axios"
+import Row from "react-bootstrap/Row"
+import Col from "react-bootstrap/Col"
+import Button from "react-bootstrap/Button"
 
 import UserTable from "../components/Table"
 import Toolbar from "../components/Toolbar"
@@ -66,28 +69,41 @@ function Dashboard(props) {
   }
 
   return (
-    <>
-      <checkboxContext.Provider
-        value={{
-          checkedIDs,
-          manageAccess,
-        }}
-      >
-        <Toolbar checkboxContext={checkboxContext} />
-      </checkboxContext.Provider>
-      <tableContext.Provider
-        value={{
-          users,
-          handleClick,
-          handleSelectAll,
-          isChecked,
-          checkedAll,
-        }}
-      >
-        <UserTable tableContext={tableContext} />
-      </tableContext.Provider>
-      <button onClick={props.logout}>logout</button>
-    </>
+    <div>
+      <Row className='justify-content-center'>
+        <Col
+          md={8}
+          className='d-flex justify-content-between border-bottom border-dark py-3'
+        >
+          <checkboxContext.Provider
+            value={{
+              checkedIDs,
+              manageAccess,
+            }}
+          >
+            <Toolbar checkboxContext={checkboxContext} />
+          </checkboxContext.Provider>
+          <Button variant='secondary' onClick={props.logout}>
+            logout
+          </Button>
+        </Col>
+      </Row>
+      <Row className='justify-content-center'>
+        <Col md={8}>
+          <tableContext.Provider
+            value={{
+              users,
+              handleClick,
+              handleSelectAll,
+              isChecked,
+              checkedAll,
+            }}
+          >
+            <UserTable tableContext={tableContext} />
+          </tableContext.Provider>
+        </Col>
+      </Row>
+    </div>
   )
 }
 

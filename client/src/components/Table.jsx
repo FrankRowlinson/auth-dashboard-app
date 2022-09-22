@@ -1,20 +1,26 @@
 import { useContext } from "react"
+import moment from "moment"
+import Table from "react-bootstrap/Table"
+import InputGroup from "react-bootstrap/InputGroup"
+import BlockIcon from "@mui/icons-material/Block"
+import CheckIcon from "@mui/icons-material/Check"
 
-function Table(props) {
+function UserTable(props) {
   const { users, handleClick, handleSelectAll, isChecked, checkedAll } =
     useContext(props.tableContext)
 
   return (
     <>
-      <table>
+      <Table responsive hover>
         <thead>
           <tr>
             <td>
-              <input
-                type='checkbox'
-                onChange={handleSelectAll}
-                checked={checkedAll}
-              ></input>
+              <InputGroup>
+                <InputGroup.Checkbox
+                  onChange={handleSelectAll}
+                  checked={checkedAll}
+                ></InputGroup.Checkbox>
+              </InputGroup>
             </td>
             <td>ID</td>
             <td>Name</td>
@@ -29,26 +35,30 @@ function Table(props) {
             return (
               <tr key={key}>
                 <td>
-                  <input
-                    id={`checkbox-${user.id}`}
-                    type='checkbox'
-                    onChange={handleClick}
-                    checked={isChecked.includes(`checkbox-${user.id}`)}
-                  ></input>
+                  <InputGroup>
+                    <InputGroup.Checkbox
+                      id={`checkbox-${user.id}`}
+                      type='checkbox'
+                      onChange={handleClick}
+                      checked={isChecked.includes(`checkbox-${user.id}`)}
+                    ></InputGroup.Checkbox>
+                  </InputGroup>
                 </td>
                 <td>{user.id}</td>
                 <td>{user.username}</td>
                 <td>{user.email}</td>
-                <td>{user.createdAt}</td>
-                <td>{user.lastLogin}</td>
-                <td>{user.status ? `V` : "X"}</td>
+                <td>{moment(user.createdAt).format("llll")}</td>
+                <td>
+                  {user.lastLogin ? moment(user.lastLogin).fromNow() : "-"}
+                </td>
+                <td>{user.status ? <CheckIcon /> : <BlockIcon />}</td>
               </tr>
             )
           })}
         </tbody>
-      </table>
+      </Table>
     </>
   )
 }
 
-export default Table
+export default UserTable

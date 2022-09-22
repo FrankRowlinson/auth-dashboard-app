@@ -6,19 +6,22 @@ import axios from "axios"
 import { useCookies } from "react-cookie"
 
 function AuthForm() {
-  const [cookies, setCookie] = useCookies()
+  const [, setCookie] = useCookies()
+
   const initialValues = {
     username: "",
     password: "",
   }
 
-  const onSubmit = (data) => {
+  const onSubmit = (data, { resetForm }) => {
     axios.post("http://localhost:3001/login", data).then((res) => {
       if (res.data.hasOwnProperty("error")) {
         alert(res.data.error)
+        resetForm({
+          values: initialValues,
+        })
       } else {
         setCookie("authToken", res.data.token, { path: "/" })
-        console.log(cookies)
       }
     })
   }
@@ -26,7 +29,6 @@ function AuthForm() {
   const validationSchema = Yup.object().shape({
     username: Yup.string().required(),
     password: Yup.string().required(),
-    email: Yup.string().email(),
   })
 
   return (

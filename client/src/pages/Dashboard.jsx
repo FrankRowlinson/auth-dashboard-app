@@ -2,7 +2,7 @@ import { createContext, useState, useEffect } from "react"
 import { useCookies } from "react-cookie"
 import axios from "axios"
 
-import Table from "../components/Table"
+import UserTable from "../components/Table"
 import Toolbar from "../components/Toolbar"
 
 const getData = (ids, action) => {
@@ -59,26 +59,10 @@ function Dashboard(props) {
     setCheckedIDs(isChecked.map((el) => el.split("-")[1]))
   }, [isChecked])
 
-  const handleBlock = async (ids) => {
-    console.log(getData(ids, "block"))
+  const manageAccess = async (ids, status) => {
     await axios
-      .post("http://localhost:3001/", getData(ids, "block"), getHeaders(cookie))
+      .post("http://localhost:3001/", getData(ids, status), getHeaders(cookie))
       .then(props.updateTable())
-  }
-
-  const handleUnblock = async (ids) => {
-    await axios
-      .post("http://localhost:3001/", getData(ids, "unblock"), getHeaders())
-      .then(props.updateTable())
-  }
-
-  const handleDelete = async (ids) => {
-    await axios
-      .post("http://localhost:3001/", getData(ids, "delete"), getHeaders())
-      .then(() => {
-        setCheckedIDs([])
-        props.updateTable()
-      })
   }
 
   return (
@@ -86,9 +70,7 @@ function Dashboard(props) {
       <checkboxContext.Provider
         value={{
           checkedIDs,
-          handleBlock,
-          handleUnblock,
-          handleDelete,
+          manageAccess,
         }}
       >
         <Toolbar checkboxContext={checkboxContext} />
@@ -102,7 +84,7 @@ function Dashboard(props) {
           checkedAll,
         }}
       >
-        <Table tableContext={tableContext} />
+        <UserTable tableContext={tableContext} />
       </tableContext.Provider>
       <button onClick={props.logout}>logout</button>
     </>

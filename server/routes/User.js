@@ -19,6 +19,27 @@ async function validateUser(token) {
   return !!user && user.status
 }
 
+async function manageAccess(ids, status) {
+  await User.update(
+    {
+      status: status,
+    },
+    {
+      where: {
+        id: [...ids],
+      },
+    }
+  )
+}
+
+async function deleteUsers(ids) {
+  await User.destroy({
+    where: {
+      id: [...ids],
+    },
+  })
+}
+
 router.get("/authcheck", validateToken, async (req, res) => {
   const hasAccess = await validateUser(req.token)
   res.json({ hasAccess: hasAccess })
@@ -28,33 +49,13 @@ router.post("/", validateToken, async (req, res) => {
   const hasAccess = await validateUser(req.token)
   if (hasAccess) {
     const { userIds, action } = req.body
-    userIds.forEach((userid) => {
-      if (action === "delete") {
-        User.destroy({
-          where: {
-            id: userid,
-          },
-        })
-      } else if (action === "block") {
-        User.update(
-          { status: false },
-          {
-            where: {
-              id: userid,
-            },
-          }
-        )
-      } else if (action === "unblock") {
-        User.update(
-          { status: true },
-          {
-            where: {
-              id: userid,
-            },
-          }
-        )
-      }
-    })
+    if (action == 0 || action == 1) {
+      await manageAccess(userIds, action)
+      res.json("done")
+    } else if (action == 2) {
+      await deleteUsers(userIds)
+      res.json("done")
+    }
   } else {
     res.json({ error: "You have no permission for this action!" })
   }
@@ -67,22 +68,18 @@ router.get("/", async (_, res) => {
 
 router.post("/register", async (req, res) => {
   const { username, password, email } = req.body
-  if (!password) {
-    res.json({ error: "password must be specified" })
-  } else {
-    bcrypt.hash(password, 10).then(async (hash) => {
-      try {
-        await User.create({
-          username: username,
-          password: hash,
-          email: email,
-        })
-        res.json("success")
-      } catch (e) {
-        res.json({ errors: e.errors.map((el) => el.message) })
-      }
-    })
-  }
+  bcrypt.hash(password, 10).then(async (hash) => {
+    try {
+      await User.create({
+        username: username,
+        password: hash,
+        email: email,
+      })
+      res.json("success")
+    } catch (e) {
+      res.json({ errors: e.errors.map((el) => el.message) })
+    }
+  })
 })
 
 router.post("/login", async (req, res) => {

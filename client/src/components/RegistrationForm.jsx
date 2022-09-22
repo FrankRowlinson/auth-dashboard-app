@@ -2,9 +2,10 @@ import React from "react"
 import { Formik, Field, Form, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import FormError from "./FormError"
+import FormMessage from "./FormMessage"
 import axios from "axios"
 
-function RegistrationForm() {
+function RegistrationForm(props) {
   const initialValues = {
     username: "",
     password: "",
@@ -14,6 +15,11 @@ function RegistrationForm() {
   const onSubmit = (data) => {
     axios.post("http://localhost:3001/register", data).then((res) => {
       console.log(res)
+      if (res.data.hasOwnProperty("errors")) {
+        props.setMessage({ text: "Try different username of email", status: 1 })
+      } else {
+        props.setMessage({ text: "Success", status: 0 })
+      }
     })
   }
 
@@ -25,9 +31,13 @@ function RegistrationForm() {
 
   return (
     <div>
+      <FormMessage message={props.message} />
       <Formik
         initialValues={initialValues}
-        onSubmit={onSubmit}
+        onSubmit={(values, { resetForm }) => {
+          onSubmit(values)
+          resetForm({ values: initialValues })
+        }}
         validationSchema={validationSchema}
       >
         <Form>

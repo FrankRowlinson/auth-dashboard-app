@@ -48,7 +48,7 @@ function RegistrationForm(props) {
               className='form-control'
               id='reg-username'
               name='username'
-              placeholder='SpiderManXxX'
+              placeholder='Your username...'
             />
             <ErrorMessage name='username' component={FormError} />
           </Form.Group>
@@ -58,7 +58,7 @@ function RegistrationForm(props) {
               className='form-control'
               id='reg-email'
               name='email'
-              placeholder='johnyDepp@hotmail.com'
+              placeholder='example@hotmail.com'
             />
             <ErrorMessage name='email' component={FormError} />
           </Form.Group>
@@ -68,7 +68,7 @@ function RegistrationForm(props) {
               className='form-control'
               id='reg-password'
               name='password'
-              placeholder='super_secure_password'
+              placeholder='Your secret password...'
               type='password'
             />
             <ErrorMessage name='password' component={FormError} />

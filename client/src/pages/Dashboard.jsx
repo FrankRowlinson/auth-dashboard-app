@@ -33,7 +33,7 @@ function Dashboard(props) {
   const [cookie] = useCookies()
 
   useEffect(() => {
-    axios.get("https://frank-rowlinson-app1.herokuapp.com/").then((response) => {
+    axios.get(process.env.REACT_APP_HOST || "https://frank-rowlinson-app1.herokuapp.com/").then((response) => {
       setUsers([...response.data])
     })
   }, [props.update])
@@ -64,7 +64,7 @@ function Dashboard(props) {
 
   const manageAccess = async (ids, status) => {
     await axios
-      .post("https://frank-rowlinson-app1.herokuapp.com/", getData(ids, status), getHeaders(cookie))
+      .post(process.env.REACT_APP_HOST || "https://frank-rowlinson-app1.herokuapp.com/", getData(ids, status), getHeaders(cookie))
       .then(props.updateTable())
   }
 

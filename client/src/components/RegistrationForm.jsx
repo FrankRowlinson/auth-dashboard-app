@@ -15,7 +15,7 @@ function RegistrationForm(props) {
   }
 
   const onSubmit = (data) => {
-    axios.post("https://frank-rowlinson-app1.herokuapp.com/register", data).then((res) => {
+    axios.post(`${process.env.REACT_APP_HOST}register` || "https://frank-rowlinson-app1.herokuapp.com/register", data).then((res) => {
       if (res.data.hasOwnProperty("errors")) {
         props.setMessage({ text: "Try different username or email", status: 1 })
       } else {
@@ -43,7 +43,7 @@ function RegistrationForm(props) {
         <FormikForm className='w-100 h-100'>
           <FormMessage message={props.message} />
           <Form.Group className='mb-2'>
-            <Form.Label class='d-block text-start mb-1'>Username</Form.Label>
+            <Form.Label className='d-block text-start mb-1'>Username</Form.Label>
             <Field
               className='form-control'
               id='reg-username'
@@ -53,7 +53,7 @@ function RegistrationForm(props) {
             <ErrorMessage name='username' component={FormError} />
           </Form.Group>
           <Form.Group>
-            <Form.Label class='d-block text-start'>Email</Form.Label>
+            <Form.Label className='d-block text-start'>Email</Form.Label>
             <Field
               className='form-control'
               id='reg-email'
@@ -63,7 +63,7 @@ function RegistrationForm(props) {
             <ErrorMessage name='email' component={FormError} />
           </Form.Group>
           <Form.Group>
-            <Form.Label class='d-block text-start'>Password</Form.Label>
+            <Form.Label className='d-block text-start'>Password</Form.Label>
             <Field
               className='form-control'
               id='reg-password'

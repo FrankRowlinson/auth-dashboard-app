@@ -14,7 +14,7 @@ function App() {
   const [update, setUpdate] = useState(false)
 
   const updateTable = () => {
-    setTimeout(() => setUpdate(!update), 200)
+    setTimeout(() => setUpdate(!update), 500)
   }
 
   useEffect(() => {

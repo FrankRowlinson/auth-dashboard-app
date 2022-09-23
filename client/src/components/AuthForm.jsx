@@ -16,7 +16,7 @@ function AuthForm() {
   }
 
   const onSubmit = (data, { resetForm }) => {
-    axios.post("https://frank-rowlinson-app1.herokuapp.com/login", data).then((res) => {
+    axios.post(`${process.env.REACT_APP_HOST}login` || "https://frank-rowlinson-app1.herokuapp.com/login", data).then((res) => {
       if (res.data.hasOwnProperty("error")) {
         alert(res.data.error)
         resetForm({
@@ -41,7 +41,7 @@ function AuthForm() {
     >
       <FormikForm className='w-100 h-100'>
         <Form.Group>
-          <Form.Label class='d-block text-start'>Username</Form.Label>
+          <Form.Label className='d-block text-start'>Username</Form.Label>
           <Field
             className='form-control'
             id='auth-username'
@@ -51,7 +51,7 @@ function AuthForm() {
           <ErrorMessage name='username' component={FormError} />
         </Form.Group>
         <Form.Group>
-          <Form.Label class='d-block text-start'>Password</Form.Label>
+          <Form.Label className='d-block text-start'>Password</Form.Label>
           <Field
             className='form-control'
             id='auth-password'

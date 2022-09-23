@@ -2,7 +2,7 @@ import axios from "axios"
 
 async function authChecker(cookie) {
   const hasAccess = await axios
-    .get("http://localhost:3001/authcheck", {
+    .get("https://frank-rowlinson-app1.herokuapp.com/authcheck", {
       headers: {
         authorization: cookie.authToken,
       },

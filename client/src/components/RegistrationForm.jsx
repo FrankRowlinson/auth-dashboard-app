@@ -15,7 +15,7 @@ function RegistrationForm(props) {
   }
 
   const onSubmit = (data) => {
-    axios.post("http://localhost:3001/register", data).then((res) => {
+    axios.post("https://frank-rowlinson-app1.herokuapp.com/register", data).then((res) => {
       if (res.data.hasOwnProperty("errors")) {
         props.setMessage({ text: "Try different username or email", status: 1 })
       } else {

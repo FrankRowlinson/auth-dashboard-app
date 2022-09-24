@@ -15,10 +15,10 @@ module.exports = {
     dialect: "mysql",
   },
   production: {
-    username: "be5d6aa027cc75",
-    password: "ed9252ae",
-    database: "heroku_8e82daef9edefe7",
-    host: "us-cdbr-east-06.cleardb.net",
+    username: process.env.MYSQL_USERNAME,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
+    host: process.env.MYSQL_HOST,
     dialect: "mysql",
   },
 }

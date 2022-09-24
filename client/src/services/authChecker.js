@@ -1,8 +1,10 @@
 import axios from "axios"
 
+const HOST = process.env.REACT_APP_HOST || "http://localhost:3001/"
+
 async function authChecker(cookie) {
   const hasAccess = await axios
-    .get(`${process.env.REACT_APP_HOST}authcheck` || "https://frank-rowlinson-app1.herokuapp.com/authcheck", {
+    .get(`${HOST}authcheck`, {
       headers: {
         authorization: cookie.authToken,
       },

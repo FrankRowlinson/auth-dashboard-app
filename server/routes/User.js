@@ -20,16 +20,21 @@ async function validateUser(token) {
 }
 
 async function manageAccess(ids, status) {
-  await User.update(
-    {
-      status: status,
-    },
-    {
-      where: {
-        id: [...ids],
+  if (status == 2) {
+    await deleteUsers(ids)
+  } else {
+    await User.update(
+      {
+        status: status,
       },
-    }
-  )
+      {
+        where: {
+          id: [...ids],
+        },
+      }
+    )
+  }
+  
 }
 
 async function deleteUsers(ids) {
@@ -42,22 +47,17 @@ async function deleteUsers(ids) {
 
 router.get("/authcheck", validateToken, async (req, res) => {
   const hasAccess = await validateUser(req.token)
-  res.json({ hasAccess: hasAccess })
+  res.json({ hasAccess })
 })
 
 router.post("/", validateToken, async (req, res) => {
   const hasAccess = await validateUser(req.token)
   if (hasAccess) {
-    const { userIds, action } = req.body
-    if (action == 0 || action == 1) {
+      const { userIds, action } = req.body
       await manageAccess(userIds, action)
-      res.json("done")
-    } else if (action == 2) {
-      await deleteUsers(userIds)
-      res.json("done")
-    }
+      res.json(0)
   } else {
-    res.json({ error: "You have no permission for this action!" })
+    res.json(1)
   }
 })
 

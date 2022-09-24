@@ -1,4 +1,3 @@
-import { useContext } from "react"
 import moment from "moment"
 import Table from "react-bootstrap/Table"
 import ToggleButton from "react-bootstrap/ToggleButton"
@@ -7,10 +6,9 @@ import BlockIcon from "@mui/icons-material/Block"
 import CheckIcon from "@mui/icons-material/Check"
 
 function UserTable(props) {
-  const { users, handleClick, handleSelectAll, isChecked, checkedAll } =
-    useContext(props.tableContext)
+  const { users, handleClick, handleSelectAll, isChecked, checkedAll } = props
 
-  const checkStatus = (id) => isChecked.includes(`checkbox-${id}`)
+  const checkStatus = id => isChecked.includes(id)
   const checkboxStyle = "dark"
 
   return (
@@ -40,9 +38,9 @@ function UserTable(props) {
         </tr>
       </thead>
       <tbody>
-        {users.map((user, key) => {
+        {users.map((user) => {
           return (
-            <tr key={key}>
+            <tr key={user.id}>
               <td>
                 <ButtonGroup>
                   <ToggleButton

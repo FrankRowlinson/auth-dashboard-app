@@ -1,12 +1,16 @@
-import { createContext, useState, useEffect } from "react"
-import { useCookies } from "react-cookie"
-import axios from "axios"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-import Button from "react-bootstrap/Button"
+import { useState, useEffect } from 'react'
+import { useCookies } from 'react-cookie'
+import axios from 'axios'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
 
-import UserTable from "../components/Table"
-import Toolbar from "../components/Toolbar"
+import retrieveUsers from '../services/retrieveUsers'
+
+import UserTable from '../components/Table'
+import Toolbar from '../components/Toolbar'
+
+const HOST = process.env.REACT_APP_HOST || "http://localhost:3001/"
 
 const getData = (ids, action) => {
   return {
@@ -22,25 +26,23 @@ const getHeaders = (cookie) => {
   }
 }
 
-const checkboxContext = createContext()
-const tableContext = createContext()
-
 function Dashboard(props) {
-  const [users, setUsers] = useState([])
+  const { users, setUsers, logout } = props
   const [isChecked, setChecked] = useState([])
   const [checkedAll, setCheckedAll] = useState(false)
-  const [checkedIDs, setCheckedIDs] = useState([])
   const [cookie] = useCookies()
 
   useEffect(() => {
-    axios.get(process.env.REACT_APP_HOST || "https://frank-rowlinson-app1.herokuapp.com/").then((response) => {
-      setUsers([...response.data])
-    })
-  }, [props.update])
+    const fetchData = async () => {
+      const response = await retrieveUsers()
+      setUsers(response)
+    }
+    fetchData()
+  }, [setUsers])
 
   useEffect(() => {
     if (checkedAll) {
-      setChecked(users.map((user) => `checkbox-${user.id}`))
+      setChecked(users.map((user) => user.id))
     } else {
       setChecked([])
     }
@@ -52,55 +54,47 @@ function Dashboard(props) {
 
   const handleClick = (e) => {
     const { id, checked } = e.target
-    setChecked([...isChecked, id])
+    const userid = +id.split('-')[1]
+    setChecked([...isChecked, userid])
     if (!checked) {
-      setChecked(isChecked.filter((item) => item !== id))
+      setChecked(isChecked.filter((item) => item !== userid))
     }
   }
 
-  useEffect(() => {
-    setCheckedIDs(isChecked.map((el) => el.split("-")[1]))
-  }, [isChecked])
-
   const manageAccess = async (ids, status) => {
-    await axios
-      .post(process.env.REACT_APP_HOST || "https://frank-rowlinson-app1.herokuapp.com/", getData(ids, status), getHeaders(cookie))
-      .then(props.updateTable())
+    try {await axios.post(
+      HOST,
+      getData(ids, status),
+      getHeaders(cookie)
+    )} catch(e) {
+      console.log(e)
+    }
+    const res = await retrieveUsers()
+    setUsers(res)
   }
 
   return (
     <div>
-      <Row className='justify-content-center'>
+      <Row className="justify-content-center">
         <Col
           md={8}
-          className='d-flex justify-content-between border-bottom border-dark py-3'
+          className="d-flex justify-content-between border-bottom border-dark py-3"
         >
-          <checkboxContext.Provider
-            value={{
-              checkedIDs,
-              manageAccess,
-            }}
-          >
-            <Toolbar checkboxContext={checkboxContext} />
-          </checkboxContext.Provider>
-          <Button variant='secondary' onClick={props.logout}>
+          <Toolbar manageAccess={manageAccess} isChecked={isChecked} />
+          <Button variant="secondary" onClick={logout}>
             logout
           </Button>
         </Col>
       </Row>
-      <Row className='justify-content-center'>
+      <Row className="justify-content-center">
         <Col md={8}>
-          <tableContext.Provider
-            value={{
-              users,
-              handleClick,
-              handleSelectAll,
-              isChecked,
-              checkedAll,
-            }}
-          >
-            <UserTable tableContext={tableContext} />
-          </tableContext.Provider>
+          <UserTable
+            checkedAll={checkedAll}
+            isChecked={isChecked}
+            handleSelectAll={handleSelectAll}
+            handleClick={handleClick}
+            users={users}
+          />
         </Col>
       </Row>
     </div>

@@ -7,6 +7,8 @@ import Button from "react-bootstrap/Button"
 import FormError from "./FormError"
 import axios from "axios"
 
+const HOST = process.env.REACT_APP_HOST || "http://localhost:3001/"
+
 function AuthForm() {
   const [, setCookie] = useCookies()
 
@@ -16,7 +18,7 @@ function AuthForm() {
   }
 
   const onSubmit = (data, { resetForm }) => {
-    axios.post(`${process.env.REACT_APP_HOST}login` || "https://frank-rowlinson-app1.herokuapp.com/login", data).then((res) => {
+    axios.post(`${HOST}login`, data).then((res) => {
       if (res.data.hasOwnProperty("error")) {
         alert(res.data.error)
         resetForm({

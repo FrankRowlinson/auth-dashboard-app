@@ -7,6 +7,8 @@ import FormError from "./FormError"
 import FormMessage from "./FormMessage"
 import axios from "axios"
 
+const HOST = process.env.REACT_APP_HOST || "http://localhost:3001/"
+
 function RegistrationForm(props) {
   const initialValues = {
     username: "",
@@ -14,13 +16,20 @@ function RegistrationForm(props) {
     email: "",
   }
 
+  const message = {
+    error: {
+      text: "Try different username or email",
+      status: 1
+    },
+    success: {
+      text: "User has been created",
+      status: 0
+    }
+  }
+
   const onSubmit = (data) => {
-    axios.post(`${process.env.REACT_APP_HOST}register` || "https://frank-rowlinson-app1.herokuapp.com/register", data).then((res) => {
-      if (res.data.hasOwnProperty("errors")) {
-        props.setMessage({ text: "Try different username or email", status: 1 })
-      } else {
-        props.setMessage({ text: "Success", status: 0 })
-      }
+    axios.post(`${HOST}register`, data).then((res) => {
+      props.setMessage(res.data.hasOwnProperty("errors") ? message.error : message.success)
     })
   }
 
